@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My To Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Toto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+        background-color: rgb(53, 63, 91);
+      }
+
+      #container {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      p {
+        font-family: "Noto Serif Toto";
+        font-size: 60px;
+        color: white;
+        margin: 30px;
+      }
+      .search_bar {
+        position: relative;
+      }
+
+      input {
+        height: 30px;
+        width: 400px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 30px;
+        font-family: "Reenie Beanie";
+        color: white;
+        text-align: center;
+        border-radius: 7px;
+        background-color: rgb(37, 44, 64);
+      }
+
+      #search_bar {
+        border: 3px solid rgb(40, 78, 132);
+        margin-bottom: 20px;
+      }
+
+      #add_todo {
+        border: none;
+      }
+
+      label {
+        color: white;
+        margin-top: 20px;
+        margin-bottom: 5px;
+      }
+
+      button {
+        background-color: rgb(163, 73, 164);
+        border: none;
+        font-size: 15px;
+        margin-top: 20px;
+        padding: 10px 50px 10px 50px;
+        font-family: "Noto Serif Toto";
+        color: white;
+      }
+      button:hover {
+        background-color: White;
+        color: rgb(163, 73, 164);
+      }
+      button:active {
+        font-size: 20px;
+      }
+
+      #todo_card {
+        background-color: rgb(66, 58, 111);
+        color: rgb(200, 181, 196);
+        font-family: "Reenie Beanie";
+        font-size: 25px;
+        height: 30px;
+        width: 390px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-top: 2px;
+        position: relative;
+      }
+      img {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        left: 380px;
+        top: 5px;
+      }
+
+      img:active {
+        width: 30px;
+      }
+
+      .search_bar img {
+        left: 15px;
+        top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <p>Todo List</p>
+      <div class="search_bar">
+        <input type="text" id="search_bar" placeholder="search todos" />
+        <img
+          onclick="filterWithSearch()"
+          src="https://cdn-icons-png.flaticon.com/512/875/875623.png"
+        />
+      </div>
+      <div id="todo_list"></div>
+
+      <label for="add_todo">Add new todo..</label>
+
+      <input minlength="2" name="add_todo" type="text" id="add_todo" />
+      <button onclick="addNewTodo()">Add todo</button>
+    </div>
+    <script>
+      let taskList = [];
+
+      const createTodoCard = (todoObject) => {
+        return `
+          <div id="todo_card"> ${todoObject.nume}
+          <img  onclick="deleteTodo(${todoObject.id})" src="https://cdn-icons-png.flaticon.com/512/1215/1215092.png" />
+        </div>
+          `;
+      };
+
+      // console.log(createTodoCard());
+
+      const displayTodoList = (todoListParam) => {
+        const domTodoList = document.querySelector("#todo_list");
+        // console.log(domTodoList);
+        let todoListString = "";
+        todoListParam.forEach((todo) => {
+          const cardStringHTML = createTodoCard(todo);
+          console.log(cardStringHTML);
+          todoListString = todoListString + cardStringHTML;
+        });
+        domTodoList.innerHTML = todoListString;
+      };
+
+      const addNewTodo = () => {
+        const addTodo = document.querySelector("#add_todo");
+        if (addTodo.value.length >= 1) {
+          let newTodoList = { nume: addTodo.value, id: taskList.length + 1 };
+          console.log(newTodoList);
+          taskList.push(newTodoList);
+          displayTodoList(taskList);
+          addTodo.value = "";
+        }
+      };
+
+      const filterWithSearch = () => {
+        const inputSearch = document.querySelector("#search_bar");
+        let searchValue = inputSearch.value;
+
+        const filteredTodoList = taskList.filter((todo) => {
+          return todo.includes(searchValue);
+        });
+        displayTodoList(filteredTodoList);
+      };
+
+      const deleteTodo = (idTodo) => {
+        const newDeletedList = taskList.filter((task) => {
+          return task.id != idTodo;
+        });
+        displayTodoList(newDeletedList);
+        taskList = newDeletedList;
+      };
+    </script>
+  </body>
+</html>
